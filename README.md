@@ -1,39 +1,10 @@
 # Example of Tensorflow Operation in C++
 
-This repository contains an example of a simple Tensorflow operation and its gradient both implemented in C++, as described in [this article](http://davidstutz.de/implementing-tensorflow-operations-in-c-including-gradients/).
+This repository contains an example of a simple Tensorflow operation and its gradient both implemented in C++, as described in [this article](http://davidstutz.de/implementing-tensorflow-operations-in-c-including-gradients/). It has been modified so that it can be built with `setuptools`/`distutils` instead of CMake.
 
 ## Building
 
-The operation is built using [CMake](https://cmake.org/) and requires an appropriate version of Tensorflow to be installed. In order to get the necessary include directories containing the Tensorflow header files, the following trick is used (also see the [Tensorflow documentation](https://www.tensorflow.org/how_tos/adding_an_op/)):
-
-    import tensorflow
-    print(tensorflow.sysconfig.get_include())
-
-In the `CMakeLists.txt` this is used as follows:
-
-    execute_process(COMMAND python3 -c "import tensorflow; print(tensorflow.sysconfig.get_include())" OUTPUT_VARIABLE Tensorflow_INCLUDE_DIRS)
-
-The remaining contents are pretty standard. Building is now done using:
-
-    $ mkdir build
-    $ cd build
-    $ cmake ..
-    $ make
-    Scanning dependencies of target inner_product
-    [ 50%] Building CXX object CMakeFiles/inner_product.dir/inner_product.cc.o
-    Linking CXX shared library libinner_product.so
-    [ 50%] Built target inner_product
-    Scanning dependencies of target inner_product_grad
-    [100%] Building CXX object CMakeFiles/inner_product_grad.dir/inner_product_grad.cc.o
-    Linking CXX shared library libinner_product_grad.so
-    [100%] Built target inner_product_grad
-
-`libinner_product.so` and `libinner_product_grad.so` can be found in `build` and need to be included in order to load the module in Python:
-
-    import tensorflow as tf
-    inner_product_module = tf.load_op_library('build/libinner_product.so')
-
-See `inner_product_tests.py` for usage examples.
+Building should be as simple as `pip install .` from the current directory (or `pip install -e .` for a development copy, or whatever). See `inner_product_tests.py` for usage examples. Note that this _only_ works with TF versions prior to 1.14, pending resolution of [TF issue #29643](https://github.com/tensorflow/tensorflow/issues/29643).
 
 ## License
 
